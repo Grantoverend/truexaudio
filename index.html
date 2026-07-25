@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truex Audio — Precision Audio Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Palette drawn from the FutureDesk panel */
+      --panel:        #ccc8be;   /* main panel surface */
+      --panel-light:  #d9d5cb;   /* raised sections */
+      --panel-dark:   #b8b4aa;   /* recessed sections */
+      --screen:       #1c1a17;   /* dark inset displays */
+      --screen-glow:  #26231f;
+      --ink:          #2b2926;   /* engraved text */
+      --ink-soft:     #55524c;   /* secondary text */
+      --amber:        #d98e2b;   /* LED / meter amber */
+      --amber-deep:   #b06f14;
+      --engrave:      rgba(43,41,38,0.25);   /* panel rule lines */
+      --engrave-soft: rgba(43,41,38,0.12);
+      --emboss:       rgba(255,255,255,0.55); /* highlight edge below engraved lines */
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--panel);
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      /* Very subtle surface texture via layered gradients */
+      background-image:
+        radial-gradient(ellipse 120% 80% at 50% 0%, rgba(255,255,255,0.25), transparent 60%),
+        linear-gradient(180deg, #d0ccc2 0%, #ccc8be 30%, #c6c2b8 100%);
+      background-attachment: fixed;
+    }
+
+    /* ─── Shared hardware vocabulary ─── */
+
+    /* Engraved horizontal rule: dark line with light emboss under it */
+    .engraved-rule {
+      border: none;
+      height: 2px;
+      background: linear-gradient(180deg, var(--engrave) 0 1px, var(--emboss) 1px 2px);
+    }
+
+    /* Panel section label — like INPUT / DRIVE / EQ on the desk */
+    .panel-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    /* Small LED dot */
+    .led {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #f5b95a, var(--amber) 60%, var(--amber-deep));
+      box-shadow:
+        0 0 6px rgba(217,142,43,0.7),
+        inset 0 -1px 1px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+
+    .led.off {
+      background: radial-gradient(circle at 35% 35%, #a5a199, #8a867e 60%, #6f6b63);
+      box-shadow: inset 0 -1px 1px rgba(0,0,0,0.25), inset 0 1px 1px rgba(255,255,255,0.2);
+    }
+
+    /* Dark inset screen — like the EQ display / program name readouts */
+    .screen-inset {
+      background: linear-gradient(180deg, #141210 0%, var(--screen) 15%, var(--screen-glow) 100%);
+      border-radius: 3px;
+      box-shadow:
+        inset 0 2px 6px rgba(0,0,0,0.8),
+        inset 0 -1px 1px rgba(255,255,255,0.05),
+        0 1px 0 rgba(255,255,255,0.5);
+      border: 1px solid rgba(0,0,0,0.5);
+    }
+
+    /* ─── NAV — a slim top rail like the desk's header row ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 40px;
+      background: linear-gradient(180deg, var(--panel-light), var(--panel));
+      border-bottom: 1px solid var(--engrave);
+      box-shadow: 0 1px 0 var(--emboss);
+    }
+
+    .nav-badge {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .nav-badge .screen-inset {
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-badge img {
+      height: 16px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 3px;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+      background: rgba(255,255,255,0.35);
+    }
+
+    /* ─── HERO — the masthead panel ─── */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 72px 40px 56px;
+      text-align: center;
+    }
+
+    /* The logo lives on its dark badge plate, exactly as supplied */
+    .hero-plate {
+      display: inline-block;
+      padding: 0;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow:
+        inset 0 3px 10px rgba(0,0,0,0.85),
+        0 1px 0 rgba(255,255,255,0.6),
+        0 -1px 0 rgba(0,0,0,0.2);
+      border: 1px solid rgba(0,0,0,0.55);
+      max-width: 720px;
+      width: 100%;
+    }
+
+    .hero-plate img {
+      width: 100%;
+      display: block;
+    }
+
+    .hero-tagline {
+      margin-top: 36px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 500;
+      font-size: clamp(20px, 3vw, 28px);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .hero-sub {
+      margin-top: 12px;
+      font-size: 15px;
+      color: var(--ink-soft);
+      max-width: 52ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-ctas {
+      margin-top: 36px;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons styled as hardware pushbuttons */
+    .btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 28px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-amber {
+      color: #1c1a17;
+      background: linear-gradient(180deg, #e9a94e 0%, var(--amber) 45%, var(--amber-deep) 100%);
+      border: 1px solid var(--amber-deep);
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+
+    .btn-amber:hover {
+      box-shadow:
+        0 2px 8px rgba(217,142,43,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+
+    .btn-panel {
+      color: var(--ink);
+      background: linear-gradient(180deg, #e2ded4 0%, var(--panel-light) 45%, #c4c0b6 100%);
+      border: 1px solid rgba(43,41,38,0.35);
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .btn-panel:hover {
+      background: linear-gradient(180deg, #eae6dc 0%, #ddd9cf 45%, #cac6bc 100%);
+    }
+
+    /* ─── SECTION FRAME — every section is a hardware panel module ─── */
+    .module {
+      max-width: 1200px;
+      margin: 0 auto 48px;
+      padding: 0 40px;
+    }
+
+    .module-frame {
+      border: 1px solid var(--engrave);
+      border-radius: 6px;
+      box-shadow:
+        inset 0 1px 0 var(--emboss),
+        0 2px 6px rgba(0,0,0,0.08);
+      background: linear-gradient(180deg, var(--panel-light) 0%, var(--panel) 100%);
+      overflow: hidden;
+    }
+
+    /* Section header bar — mimics the labelled top strip of each desk section */
+    .module-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--engrave);
+      box-shadow: 0 1px 0 var(--emboss);
+      background: linear-gradient(180deg, rgba(255,255,255,0.25), transparent);
+    }
+
+    .module-header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .module-body {
+      padding: 40px 28px;
+    }
+
+    /* ─── PLUGIN MODULES ─── */
+    .plugin-layout {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .plugin-shot {
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow:
+        0 6px 24px rgba(0,0,0,0.28),
+        0 2px 6px rgba(0,0,0,0.2),
+        0 0 0 1px rgba(0,0,0,0.3);
+    }
+
+    .plugin-shot img {
+      width: 100%;
+      display: block;
+    }
+
+    .plugin-meta h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: clamp(34px, 4.5vw, 48px);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .plugin-kind {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber-deep);
+      margin-bottom: 10px;
+    }
+
+    .plugin-copy {
+      margin-top: 18px;
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--ink-soft);
+    }
+
+    /* Spec readout — a dark screen strip listing formats, like the PROGRAM NAME display */
+    .spec-screen {
+      margin-top: 22px;
+      padding: 10px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+    }
+
+    .spec-screen span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      text-shadow: 0 0 8px rgba(217,142,43,0.5);
+    }
+
+    .plugin-actions {
+      margin-top: 26px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    /* ─── STORY BLOCK (within a plugin module) ─── */
+    .story {
+      margin-top: 44px;
+      padding-top: 32px;
+      border-top: 1px solid var(--engrave);
+      box-shadow: inset 0 1px 0 var(--emboss);
+    }
+
+    .story-label-row {
+      margin-bottom: 24px;
+    }
+
+    .story-cols {
+      column-count: 2;
+      column-gap: 48px;
+    }
+
+    .story-cols p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--ink-soft);
+      margin-bottom: 20px;
+      break-inside: avoid;
+    }
+
+    .story-cols p:first-child::first-letter {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 52px;
+      line-height: 0.85;
+      float: left;
+      padding-right: 10px;
+      padding-top: 4px;
+      color: var(--ink);
+    }
+
+    @media (max-width: 900px) {
+      .story-cols { column-count: 1; }
+    }
+
+    /* ─── ABOUT MODULE ─── */
+    .about-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
+    .about-cols p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--ink-soft);
+      margin-bottom: 20px;
+    }
+
+    .about-cols p strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .about-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    /* ─── SIGNUP MODULE ─── */
+    .signup-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .signup-blurb p {
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 1.75;
+    }
+
+    .signup-form {
+      display: flex;
+      gap: 10px;
+    }
+
+    .signup-form input[type="email"] {
+      flex: 1;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--amber);
+      background: linear-gradient(180deg, #141210, var(--screen));
+      border: 1px solid rgba(0,0,0,0.5);
+      border-radius: 4px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.5);
+      padding: 13px 16px;
+      outline: none;
+      letter-spacing: 0.05em;
+    }
+
+    .signup-form input[type="email"]::placeholder {
+      color: rgba(217,142,43,0.4);
+    }
+
+    .signup-form input[type="email"]:focus {
+      border-color: var(--amber-deep);
+    }
+
+    /* ─── FOOTER — bottom rail ─── */
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    footer .panel-label { color: var(--ink-soft); }
+
+    .footer-links {
+      display: flex;
+      gap: 26px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--ink); }
+
+    .footer-fine {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--ink-soft);
+      opacity: 0.7;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 48px 20px 40px; }
+      .module { padding: 0 20px; margin-bottom: 32px; }
+      .module-body { padding: 28px 20px; }
+      .plugin-layout,
+      .about-cols,
+      .signup-body {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+      .signup-form { flex-direction: column; }
+      footer { padding: 24px 20px 40px; flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav>
+    <a href="#" class="nav-badge" aria-label="Truex Audio home">
+      <span class="screen-inset">
+        <img src="assets/Truex_Audio_Logo.png" alt="Truex Audio">
+        <span class="led" aria-hidden="true"></span>
+      </span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#plugins">Plugins</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#updates">Updates</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <header class="hero">
+    <div class="hero-plate">
+      <img src="assets/Truex_Audio_Logo.png" alt="Truex Audio">
+    </div>
+    <p class="hero-tagline">Precision audio tools</p>
+    <p class="hero-sub">
+      Instruments and processors built with the care of the hardware that inspired them.
+      Made to be trusted, made to last.
+    </p>
+    <div class="hero-ctas">
+      <a href="#plugins" class="btn btn-amber">Browse plugins</a>
+      <a href="#about" class="btn btn-panel">Our approach</a>
+    </div>
+  </header>
+
+  <!-- ─── PRO-54 MODULE ─── -->
+  <section class="module" id="plugins">
+    <div class="module-frame">
+      <div class="module-header">
+        <span class="panel-label">Instrument &nbsp;01</span>
+        <div class="module-header-right">
+          <span class="status-line"><span class="led" aria-hidden="true"></span> Available now</span>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="plugin-layout">
+          <div class="plugin-shot">
+            <img src="assets/Pro-54_Interface_w_Truex_Logo.png" alt="Pro-54 polyphonic synthesiser interface" loading="lazy">
+          </div>
+          <div class="plugin-meta">
+            <div class="plugin-kind">Polyphonic synthesiser</div>
+            <h3>Pro-54</h3>
+            <p class="plugin-copy">
+              A faithful continuation of the classic Prophet-style voice — two oscillators per voice,
+              the unmistakable filter, poly-mod and wheel-mod routing, and an onboard delay.
+              Free to download. No account, no unlock codes.
+            </p>
+            <div class="spec-screen screen-inset">
+              <span>CLAP</span>
+              <span>VST3</span>
+              <span>Free</span>
+              <span>Open source</span>
+            </div>
+            <div class="plugin-actions">
+              <a href="#" class="btn btn-amber">Download</a>
+              <a href="#" class="btn btn-panel">Details</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="story">
+          <div class="story-label-row">
+            <span class="panel-label">The story</span>
+          </div>
+          <div class="story-cols">
+            <p>
+              In 1978, Dave Smith and Sequential Circuits released the Prophet-5 — the first
+              synthesizer that let you dial in a sound, save it, and instantly recall it later.
+              Before that, getting a sound back meant physically writing down every knob position
+              and resetting them all by hand. That one idea, programmable memory, changed how
+              synthesizers were used from that point on, and the warm, slightly imperfect analog
+              tone underneath it became a sound in its own right.
+            </p>
+            <p>
+              The Prophet-5 went on to show up everywhere. Gary Numan built his signature sound
+              around it. Nick Rhodes used it across Duran Duran's early records. Joe Zawinul made
+              it a core voice in Weather Report. Phil Collins leaned on it through his early solo
+              albums, and it turns up across records by Peter Gabriel, Madonna, Michael Jackson,
+              Vangelis, Depeche Mode, Hall &amp; Oates, a-ha, Radiohead, and Taylor Swift, among
+              plenty of others. Close to fifty years on, it's still one of the most recognisable
+              synth tones in popular music.
+            </p>
+            <p>
+              Native Instruments built their own software version of it, the Pro-Five, then
+              refined it into the Pro-52 in 2000 and, in late 2002, the Pro-53 — widely regarded
+              at the time as one of the best software recreations of a classic analog synth
+              available, right down to the quirks of the original circuit. Its sync lead preset
+              even became a familiar voice in the Portal 2 soundtrack. NI discontinued the Pro-53
+              in 2020, and for a few years it simply wasn't available to buy or download anywhere.
+            </p>
+            <p>
+              It's a very special plugin to me — the original Pro-52 and then Pro-53, I've been
+              using since they were released. While I've been lucky to keep using them thanks to
+              Bitwig's 32-bit legacy plugin support, I've always wanted an up-to-date, 64-bit
+              compatible version, and the possibility of adding some other features I've always
+              wanted to see in the plugin. Thanks to the kind work of Native Instruments and
+              Cmajor, I'm really excited to be able to give you a free and open-source
+              (under GPL) CLAP and VST3 version of the plugin.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FUTUREDESK MODULE ─── -->
+  <section class="module">
+    <div class="module-frame">
+      <div class="module-header">
+        <span class="panel-label">Processor &nbsp;02</span>
+        <div class="module-header-right">
+          <span class="status-line"><span class="led off" aria-hidden="true"></span> In development</span>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="plugin-layout">
+          <div class="plugin-shot">
+            <img src="assets/FutureDesk_Skeuomorphic_-_Copy.png" alt="FutureDesk channel strip interface" loading="lazy">
+          </div>
+          <div class="plugin-meta">
+            <div class="plugin-kind">Channel strip</div>
+            <h3>FutureDesk</h3>
+            <p class="plugin-copy">
+              A complete console channel in a single window — input trim, drive with selectable
+              character, four-band parametric EQ, VCA-style dynamics, and a fader you'll
+              actually want to mix on.
+            </p>
+            <div class="spec-screen screen-inset">
+              <span>CLAP</span>
+              <span>VST3</span>
+              <span>Coming soon</span>
+            </div>
+            <div class="plugin-actions">
+              <a href="#updates" class="btn btn-panel">Get notified</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ABOUT MODULE ─── -->
+  <section class="module" id="about">
+    <div class="module-frame">
+      <div class="module-header">
+        <span class="panel-label">About</span>
+      </div>
+      <div class="module-body">
+        <div class="about-cols">
+          <div>
+            <div class="about-name">Why Truex</div>
+            <p>
+              I sat on the Truex name for many years after encountering it first while reading
+              the biography of American electronic music pioneer
+              <strong>Raymond Scott.</strong> In this he mentioned the idea of using the name
+              Owen Truex as a pseudonym.
+            </p>
+            <p>
+              I had for a long time the idea of using that name for some of my personal music
+              projects, as I've always admired his <strong>adventurous, experimental &amp;
+              technical nouse.</strong> When it came time to think of a name for an audio company
+              it felt right — so consider the name Truex Audio somewhat of a
+              <strong>tribute to him.</strong>
+            </p>
+          </div>
+          <div>
+            <div class="about-name">How we build</div>
+            <p>
+              Everything is written close to the metal — native CLAP and direct-SDK VST3, with
+              <strong>no middleware frameworks, no licence servers, no telemetry.</strong>
+              What you download is the plugin, and nothing else.
+            </p>
+            <p>
+              Behind Truex is a background in music production, DJing and radio — years spent
+              on both sides of these tools. The plugins here are the ones
+              <strong>we wanted and couldn't find.</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SIGNUP MODULE ─── -->
+  <section class="module" id="updates">
+    <div class="module-frame">
+      <div class="module-header">
+        <span class="panel-label">Updates</span>
+        <div class="module-header-right">
+          <span class="led" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="module-body">
+        <div class="signup-body">
+          <div class="signup-blurb">
+            <div class="about-name">New releases, direct</div>
+            <p>
+              An email when a plugin ships or a major update lands. Nothing else.
+              Unsubscribe any time.
+            </p>
+          </div>
+          <form class="signup-form" onsubmit="return false;" aria-label="Email signup">
+            <input type="email" placeholder="your@email.com" aria-label="Email address" autocomplete="email">
+            <button type="submit" class="btn btn-amber">Notify me</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <span class="panel-label">Truex Audio</span>
+    <ul class="footer-links">
+      <li><a href="#plugins">Plugins</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="mailto:hello@truexaudio.com">Contact</a></li>
+    </ul>
+    <span class="footer-fine">&copy; 2026 Truex Audio &mdash; truexaudio.com</span>
+  </footer>
+
+</body>
+</html>
