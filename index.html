@@ -12,7 +12,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      /* Palette drawn from the FutureDesk panel */
       --panel:        #ccc8be;   /* main panel surface */
       --panel-light:  #d9d5cb;   /* raised sections */
       --panel-dark:   #b8b4aa;   /* recessed sections */
@@ -294,13 +293,11 @@
 
     /* ─── PLUGIN MODULES ─── */
     .plugin-layout {
-      display: grid;
-      grid-template-columns: 3fr 2fr;
-      gap: 40px;
-      align-items: center;
+      display: block;
     }
 
     .plugin-shot {
+      width: 100%;
       border-radius: 4px;
       overflow: hidden;
       box-shadow:
@@ -314,14 +311,29 @@
       display: block;
     }
 
+    .plugin-info-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.9fr);
+      gap: 56px;
+      align-items: start;
+      margin-top: 34px;
+    }
+
+    .plugin-title-row {
+      display: flex;
+      align-items: baseline;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
     .plugin-meta h3 {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
-      font-size: clamp(34px, 4.5vw, 48px);
+      font-size: clamp(44px, 6vw, 64px);
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--ink);
-      line-height: 1;
+      line-height: 0.95;
     }
 
     .plugin-kind {
@@ -331,23 +343,38 @@
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--amber-deep);
-      margin-bottom: 10px;
+      margin: 0;
     }
 
     .plugin-copy {
-      margin-top: 18px;
+      margin-top: 20px;
+      max-width: 62ch;
       font-size: 15px;
       line-height: 1.75;
       color: var(--ink-soft);
     }
 
+    .plugin-cta-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-top: 4px;
+    }
+
+    .plugin-cta-stack .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
     /* Spec readout — a dark screen strip listing formats, like the PROGRAM NAME display */
     .spec-screen {
-      margin-top: 22px;
-      padding: 10px 16px;
+      margin-top: 0;
+      padding: 12px 18px;
       display: flex;
+      align-items: center;
+      justify-content: space-between;
       flex-wrap: wrap;
-      gap: 6px 20px;
+      gap: 8px 18px;
     }
 
     .spec-screen span {
@@ -358,14 +385,6 @@
       text-transform: uppercase;
       color: var(--amber);
       text-shadow: 0 0 8px rgba(217,142,43,0.5);
-    }
-
-    .plugin-actions {
-      margin-top: 26px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
     }
 
     .status-line {
@@ -446,6 +465,21 @@
       text-transform: uppercase;
       color: var(--ink);
       margin-bottom: 16px;
+    }
+
+    .about-image {
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow:
+        0 6px 24px rgba(0,0,0,0.22),
+        0 2px 6px rgba(0,0,0,0.16),
+        0 0 0 1px rgba(0,0,0,0.24);
+    }
+
+    .about-image img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     /* ─── SIGNUP MODULE ─── */
@@ -536,12 +570,16 @@
       .hero { padding: 48px 20px 40px; }
       .module { padding: 0 20px; margin-bottom: 32px; }
       .module-body { padding: 28px 20px; }
-      .plugin-layout,
+      .plugin-info-row,
       .about-cols,
       .signup-body {
         grid-template-columns: 1fr;
         gap: 28px;
       }
+      .plugin-info-row { margin-top: 26px; }
+      .plugin-title-row { gap: 14px 22px; }
+      .plugin-cta-stack { padding-top: 0; }
+      .spec-screen { justify-content: flex-start; }
       .signup-form { flex-direction: column; }
       footer { padding: 24px 20px 40px; flex-direction: column; align-items: flex-start; }
     }
@@ -575,15 +613,6 @@
     <div class="hero-plate">
       <img src="assets/Truex_Audio_Logo.png" alt="Truex Audio">
     </div>
-    <p class="hero-tagline">Precision audio tools</p>
-    <p class="hero-sub">
-      Instruments and processors built with the care of the hardware that inspired them.
-      Made to be trusted, made to last.
-    </p>
-    <div class="hero-ctas">
-      <a href="#plugins" class="btn btn-amber">Browse plugins</a>
-      <a href="#about" class="btn btn-panel">Our approach</a>
-    </div>
   </header>
 
   <!-- ─── PRO-54 MODULE ─── -->
@@ -600,23 +629,29 @@
           <div class="plugin-shot">
             <img src="assets/Pro-54_Interface_w_Truex_Logo.png" alt="Pro-54 polyphonic synthesiser interface" loading="lazy">
           </div>
-          <div class="plugin-meta">
-            <div class="plugin-kind">Polyphonic synthesiser</div>
-            <h3>Pro-54</h3>
-            <p class="plugin-copy">
-              A faithful continuation of the classic Prophet-style voice — two oscillators per voice,
-              the unmistakable filter, poly-mod and wheel-mod routing, and an onboard delay.
-              Free to download. No account, no unlock codes.
-            </p>
-            <div class="spec-screen screen-inset">
-              <span>CLAP</span>
-              <span>VST3</span>
-              <span>Free</span>
-              <span>Open source</span>
+
+          <div class="plugin-info-row">
+            <div class="plugin-meta">
+              <div class="plugin-title-row">
+                <h3>Pro-54</h3>
+                <div class="plugin-kind">Polyphonic synthesiser</div>
+              </div>
+              <p class="plugin-copy">
+                A faithful continuation of the classic Prophet-style voice — two oscillators per voice,
+                the unmistakable filter, poly-mod and wheel-mod routing, and an onboard delay.
+                Free to download. No account, no unlock codes.
+              </p>
             </div>
-            <div class="plugin-actions">
+
+            <div class="plugin-cta-stack">
               <a href="#" class="btn btn-amber">Download</a>
-              <a href="#" class="btn btn-panel">Details</a>
+              <div class="spec-screen screen-inset">
+                <span>CLAP</span>
+                <span>VST3</span>
+                <span>Windows</span>
+                <span>Free</span>
+                <span>Open source</span>
+              </div>
             </div>
           </div>
         </div>
@@ -652,50 +687,20 @@
               in 2020, and for a few years it simply wasn't available to buy or download anywhere.
             </p>
             <p>
+              Years later, the Cmajor team brought the synth back to life by porting an
+              unreleased internal C++ version of the Pro-53 DSP to Cmajor, while also recreating
+              its interface in HTML and JavaScript. That work preserved much of the original
+              structure and became the foundation that made Pro-54 possible.
+            </p>
+            <p>
               It's a very special plugin to me — the original Pro-52 and then Pro-53, I've been
               using since they were released. While I've been lucky to keep using them thanks to
-              Bitwig's 32-bit legacy plugin support, I've always wanted an up-to-date, 64-bit
-              compatible version, and the possibility of adding some other features I've always
-              wanted to see in the plugin. Thanks to the kind work of Native Instruments and
-              Cmajor, I'm really excited to be able to give you a free and open-source
-              (under GPL) CLAP and VST3 version of the plugin.
+              Bitwig's 32-bit legacy plugin support, a lot of modern DAWs simply don't support the
+              older VST format. I've wanted an up-to-date, 64-bit compatible version, with a new,
+              resizeable GUI and the possibility of adding some other features. Thanks to the kind
+              work of Native Instruments and Cmajor, I'm really excited to be able to give you a
+              free and open-source (under GPL) CLAP and VST3 version of the plugin.
             </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── FUTUREDESK MODULE ─── -->
-  <section class="module">
-    <div class="module-frame">
-      <div class="module-header">
-        <span class="panel-label">Processor &nbsp;02</span>
-        <div class="module-header-right">
-          <span class="status-line"><span class="led off" aria-hidden="true"></span> In development</span>
-        </div>
-      </div>
-      <div class="module-body">
-        <div class="plugin-layout">
-          <div class="plugin-shot">
-            <img src="assets/FutureDesk_Skeuomorphic_-_Copy.png" alt="FutureDesk channel strip interface" loading="lazy">
-          </div>
-          <div class="plugin-meta">
-            <div class="plugin-kind">Channel strip</div>
-            <h3>FutureDesk</h3>
-            <p class="plugin-copy">
-              A complete console channel in a single window — input trim, drive with selectable
-              character, four-band parametric EQ, VCA-style dynamics, and a fader you'll
-              actually want to mix on.
-            </p>
-            <div class="spec-screen screen-inset">
-              <span>CLAP</span>
-              <span>VST3</span>
-              <span>Coming soon</span>
-            </div>
-            <div class="plugin-actions">
-              <a href="#updates" class="btn btn-panel">Get notified</a>
-            </div>
           </div>
         </div>
       </div>
@@ -713,31 +718,18 @@
           <div>
             <div class="about-name">Why Truex</div>
             <p>
-              I sat on the Truex name for many years after encountering it first while reading
-              the biography of American electronic music pioneer
-              <strong>Raymond Scott.</strong> In this he mentioned the idea of using the name
-              Owen Truex as a pseudonym.
+              The name <strong>Truex</strong> came from a biography of American electronic music pioneer
+              <strong>Raymond Scott</strong>, where he mentioned liking the name <strong>&lsquo;Truex&rsquo;</strong>.
+              Somehow the name really struck me too.
             </p>
             <p>
-              I had for a long time the idea of using that name for some of my personal music
-              projects, as I've always admired his <strong>adventurous, experimental &amp;
-              technical nouse.</strong> When it came time to think of a name for an audio company
-              it felt right — so consider the name Truex Audio somewhat of a
-              <strong>tribute to him.</strong>
+              I&rsquo;ve always admired Scott&rsquo;s adventurous, experimental and technically inventive
+              approach to music, and when it came time to name my audio company,
+              <strong>Truex Audio</strong> felt like a natural fit &mdash; and a small tribute to him.
             </p>
           </div>
-          <div>
-            <div class="about-name">How we build</div>
-            <p>
-              Everything is written close to the metal — native CLAP and direct-SDK VST3, with
-              <strong>no middleware frameworks, no licence servers, no telemetry.</strong>
-              What you download is the plugin, and nothing else.
-            </p>
-            <p>
-              Behind Truex is a background in music production, DJing and radio — years spent
-              on both sides of these tools. The plugins here are the ones
-              <strong>we wanted and couldn't find.</strong>
-            </p>
+          <div class="about-image">
+            <img src="assets/Raymond Scott.jpg" alt="Raymond Scott" loading="lazy">
           </div>
         </div>
       </div>
