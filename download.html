@@ -212,6 +212,41 @@
       font-size: 13px;
     }
     .install-note strong { color: var(--ink); }
+    .install-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .install-paths {
+      width: 100%;
+      margin-top: 16px;
+      list-style: none;
+    }
+    .install-paths li + li { margin-top: 12px; }
+    .install-paths span {
+      display: block;
+      color: var(--ink-soft);
+      font: 500 10px/1.5 'IBM Plex Mono', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .install-paths code {
+      display: block;
+      margin-top: 4px;
+      padding: 8px 10px;
+      overflow-wrap: anywhere;
+      color: var(--ink);
+      background: rgba(255,255,255,0.3);
+      border: 1px solid var(--engrave);
+      font: 400 12px/1.5 'IBM Plex Mono', monospace;
+    }
+    .install-links {
+      margin-top: 18px;
+      color: var(--ink-soft);
+      text-align: center;
+      font-size: 13px;
+    }
+    .install-links a { color: var(--ink); }
 
     footer {
       max-width: 1200px;
@@ -241,6 +276,7 @@
       .module { padding: 0 20px; }
       .module-body { padding: 22px 18px; }
       .download-grid { grid-template-columns: 1fr; }
+      .install-grid { grid-template-columns: 1fr; }
       .download-card { min-height: 0; }
       footer { padding: 20px; flex-direction: column; align-items: flex-start; }
       .footer-links { padding: 0; }
@@ -282,7 +318,7 @@
         </div>
         <div class="module-body">
           <h2 id="download-heading" class="panel-label" style="text-align:center;">Pro-55 for Windows</h2>
-          <p class="download-intro">Choose the format your DAW supports. The combined package contains both plugin formats if you want to keep your options open.</p>
+          <p class="download-intro">Choose the format your DAW supports. The combined package contains both plugin formats if you want to keep your options open. Visit the <a href="https://github.com/TruexAudio/Pro-55">Pro-55 GitHub page</a> for the source code, build instructions, and project details.</p>
           <div class="download-grid">
             <article class="download-card">
               <span class="panel-label">VST3</span>
@@ -308,6 +344,41 @@
           </div>
 
           <p class="install-note"><strong>Before installing:</strong> These are unsigned beta plugins with no installer, activation, or telemetry. Each ZIP includes installation guidance and license notices. See the <a href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/SHA256SUMS.txt">SHA-256 checksums</a> and <a href="https://github.com/TruexAudio/Pro-55">source and license details</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="module" aria-labelledby="install-heading">
+      <div class="module-frame">
+        <div class="module-header">
+          <span class="panel-label">Installation</span>
+          <span class="release-status">Windows x64</span>
+        </div>
+        <div class="module-body">
+          <h2 id="install-heading" class="panel-label" style="text-align:center;">Install the format your DAW supports</h2>
+          <p class="download-intro">Close your audio host before installing. Extract the ZIP, then copy the plugin file or bundle to one of the standard locations below. The combined ZIP contains both formats; install only the formats your host supports.</p>
+          <div class="install-grid">
+            <article class="download-card">
+              <span class="panel-label">VST3</span>
+              <h2>Copy the full bundle</h2>
+              <p>Copy the complete <code>Pro-55.vst3</code> folder, including its <code>Contents</code> folder.</p>
+              <ul class="install-paths">
+                <li><span>Per-user</span><code>%LOCALAPPDATA%\Programs\Common\VST3</code></li>
+                <li><span>System-wide</span><code>C:\Program Files\Common Files\VST3</code></li>
+              </ul>
+            </article>
+            <article class="download-card">
+              <span class="panel-label">CLAP</span>
+              <h2>Copy the plugin file</h2>
+              <p>Copy <code>Pro-55.clap</code> into the CLAP folder used by your audio host.</p>
+              <ul class="install-paths">
+                <li><span>Per-user</span><code>%LOCALAPPDATA%\Programs\Common\CLAP</code></li>
+                <li><span>System-wide</span><code>C:\Program Files\Common Files\CLAP</code></li>
+              </ul>
+            </article>
+          </div>
+          <p class="install-note"><strong>Finish setup:</strong> Start or restart your audio host and rescan for plugins if needed. System-wide folders may require administrator permission; use the per-user folder to avoid that. Pro-55 is an unsigned beta, so Windows may show a security warning.</p>
+          <p class="install-links"><a href="https://github.com/TruexAudio/Pro-55/blob/main/Pro55/INSTALLATION.md">Full installation and sound-storage guide</a> &nbsp;·&nbsp; <a href="https://github.com/TruexAudio/Pro-55">Pro-55 on GitHub</a> &nbsp;·&nbsp; <a href="https://github.com/TruexAudio/Pro-55/issues">Report an issue</a></p>
         </div>
       </div>
     </section>
