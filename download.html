@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Download the Pro-55 Windows x64 VST3 and CLAP synthesizer.">
+  <title>Pro-55 Downloads — Truex Audio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --panel: #ccc8be;
+      --panel-light: #d9d5cb;
+      --screen: #1c1a17;
+      --screen-glow: #26231f;
+      --ink: #2b2926;
+      --ink-soft: #55524c;
+      --amber: #d98e2b;
+      --amber-deep: #b06f14;
+      --engrave: rgba(43,41,38,0.25);
+      --emboss: rgba(255,255,255,0.55);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--panel);
+      background-image:
+        radial-gradient(ellipse 120% 80% at 50% 0%, rgba(255,255,255,0.25), transparent 60%),
+        linear-gradient(180deg, #d0ccc2 0%, #ccc8be 30%, #c6c2b8 100%);
+      color: var(--ink);
+      font: 400 16px/1.65 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 40px;
+      background: linear-gradient(180deg, var(--panel-light), var(--panel));
+      border-bottom: 1px solid var(--engrave);
+      box-shadow: 0 1px 0 var(--emboss);
+    }
+
+    .nav-badge { display: flex; align-items: center; text-decoration: none; }
+    .screen-inset {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 18px;
+      background: linear-gradient(180deg, #141210 0%, var(--screen) 15%, var(--screen-glow) 100%);
+      border: 1px solid rgba(0,0,0,0.5);
+      border-radius: 3px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .nav-badge img { display: block; width: auto; height: 16px; }
+    .led {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #f5b95a, var(--amber) 60%, var(--amber-deep));
+      box-shadow: 0 0 6px rgba(217,142,43,0.7), inset 0 -1px 1px rgba(0,0,0,0.3);
+    }
+    .led.off {
+      background: radial-gradient(circle at 35% 35%, #a5a199, #8a867e 60%, #6f6b63);
+      box-shadow: inset 0 -1px 1px rgba(0,0,0,0.25);
+    }
+    .nav-links, .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+    .nav-links a, .footer-links a {
+      padding: 8px 14px;
+      color: var(--ink-soft);
+      font: 500 11px/1.4 'IBM Plex Mono', monospace;
+      letter-spacing: 0.16em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .nav-links a:hover, .footer-links a:hover { color: var(--ink); }
+    .nav-links a[aria-current="page"] { color: var(--ink); }
+
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 56px 40px 34px;
+      text-align: center;
+    }
+    .hero-plate {
+      display: inline-block;
+      max-width: 520px;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.55);
+      border-radius: 6px;
+      box-shadow: inset 0 3px 10px rgba(0,0,0,0.85), 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .hero-plate img { display: block; width: 100%; }
+    h1 {
+      margin-top: 30px;
+      font: 700 clamp(40px, 6vw, 64px)/0.98 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hero-sub {
+      max-width: 62ch;
+      margin: 14px auto 0;
+      color: var(--ink-soft);
+    }
+    .panel-label {
+      color: var(--ink);
+      font: 600 11px/1.4 'IBM Plex Mono', monospace;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    .module { max-width: 1200px; margin: 0 auto 38px; padding: 0 40px; }
+    .module-frame {
+      overflow: hidden;
+      background: linear-gradient(180deg, var(--panel-light), var(--panel));
+      border: 1px solid var(--engrave);
+      border-radius: 6px;
+      box-shadow: inset 0 1px 0 var(--emboss), 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .module-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--engrave);
+      box-shadow: 0 1px 0 var(--emboss);
+    }
+    .module-body { padding: 30px 24px; }
+    .release-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink-soft);
+      font: 500 11px/1.4 'IBM Plex Mono', monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .download-intro { max-width: 70ch; margin: 0 auto 28px; text-align: center; color: var(--ink-soft); }
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .download-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-height: 260px;
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(0,0,0,0.025));
+      border: 1px solid var(--engrave);
+      border-radius: 5px;
+      box-shadow: inset 0 1px 0 var(--emboss);
+    }
+    .download-card h2 {
+      margin-top: 10px;
+      font: 700 32px/1.05 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .download-card p { margin-top: 14px; color: var(--ink-soft); font-size: 14px; }
+    .package-meta {
+      margin-top: auto;
+      padding-top: 22px;
+      color: var(--ink-soft);
+      font: 500 10px/1.5 'IBM Plex Mono', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 4px;
+      font: 600 11px/1.4 'IBM Plex Mono', monospace;
+      letter-spacing: 0.13em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .btn-disabled {
+      color: #5a5750;
+      background: linear-gradient(180deg, #dedad0, #c8c4ba);
+      border: 1px solid rgba(43,41,38,0.28);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      opacity: 0.75;
+      cursor: not-allowed;
+    }
+
+    .install-note {
+      max-width: 78ch;
+      margin: 22px auto 0;
+      padding: 16px 18px;
+      color: var(--ink-soft);
+      background: rgba(255,255,255,0.22);
+      border-left: 3px solid var(--amber-deep);
+      font-size: 13px;
+    }
+    .install-note strong { color: var(--ink); }
+
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 40px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+    .footer-links { gap: 14px; padding: 0; }
+    .footer-fine {
+      color: var(--ink-soft);
+      font: 400 10px/1.5 'IBM Plex Mono', monospace;
+      letter-spacing: 0.08em;
+    }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid var(--amber-deep);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .hero { padding: 42px 20px 24px; }
+      .module { padding: 0 20px; }
+      .module-body { padding: 22px 18px; }
+      .download-grid { grid-template-columns: 1fr; }
+      .download-card { min-height: 0; }
+      footer { padding: 20px; flex-direction: column; align-items: flex-start; }
+      .footer-links { padding: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-badge" aria-label="Truex Audio home">
+      <span class="screen-inset">
+        <img src="assets/Truex_Audio_Logo.png" alt="Truex Audio">
+        <span class="led" aria-hidden="true"></span>
+      </span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#plugins">Pro-55</a></li>
+      <li><a href="download.html" aria-current="page">Downloads</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-plate">
+      <img src="assets/Truex_Audio_Logo.png" alt="Truex Audio">
+    </div>
+    <h1>Pro-55 Downloads</h1>
+    <p class="hero-sub">Version 0.9.0 public beta · Windows x64 · VST3 and CLAP</p>
+  </header>
+
+  <main>
+    <section class="module" aria-labelledby="download-heading">
+      <div class="module-frame">
+        <div class="module-header">
+          <span class="panel-label">Choose a package</span>
+          <span class="release-status"><span class="led off" aria-hidden="true"></span> Not published yet</span>
+        </div>
+        <div class="module-body">
+          <h2 id="download-heading" class="panel-label" style="text-align:center;">Pro-55 for Windows</h2>
+          <p class="download-intro">Choose the format your DAW supports. The combined package contains both plugin formats if you want to keep your options open.</p>
+          <div class="download-grid">
+            <article class="download-card">
+              <span class="panel-label">VST3</span>
+              <h2>VST3 only</h2>
+              <p>For audio hosts that support VST3 instruments.</p>
+              <div class="package-meta">Windows x64 · 0.9.0 public beta</div>
+              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
+            </article>
+            <article class="download-card">
+              <span class="panel-label">CLAP</span>
+              <h2>CLAP only</h2>
+              <p>For audio hosts that support CLAP instruments.</p>
+              <div class="package-meta">Windows x64 · 0.9.0 public beta</div>
+              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
+            </article>
+            <article class="download-card">
+              <span class="panel-label">Both formats</span>
+              <h2>Combined ZIP</h2>
+              <p>Contains VST3 and CLAP versions. Install only the format your host supports.</p>
+              <div class="package-meta">Windows x64 · 0.9.0 public beta</div>
+              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
+            </article>
+          </div>
+
+          <p class="install-note"><strong>Before installing:</strong> These are unsigned beta plugins with no installer, activation, or telemetry. Each ZIP will include installation notes and checksums when it is published.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span class="panel-label">Truex Audio</span>
+    <ul class="footer-links">
+      <li><a href="index.html#plugins">Pro-55</a></li>
+      <li><a href="download.html" aria-current="page">Downloads</a></li>
+      <li><a href="mailto:hello@truexaudio.com">Contact</a></li>
+    </ul>
+    <span class="footer-fine">&copy; 2026 Truex Audio &mdash; truexaudio.com</span>
+  </footer>
+</body>
+</html>
