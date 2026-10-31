@@ -69,10 +69,6 @@
       background: radial-gradient(circle at 35% 35%, #f5b95a, var(--amber) 60%, var(--amber-deep));
       box-shadow: 0 0 6px rgba(217,142,43,0.7), inset 0 -1px 1px rgba(0,0,0,0.3);
     }
-    .led.off {
-      background: radial-gradient(circle at 35% 35%, #a5a199, #8a867e 60%, #6f6b63);
-      box-shadow: inset 0 -1px 1px rgba(0,0,0,0.25);
-    }
     .nav-links, .footer-links {
       display: flex;
       align-items: center;
@@ -193,15 +189,17 @@
       font: 600 11px/1.4 'IBM Plex Mono', monospace;
       letter-spacing: 0.13em;
       text-align: center;
+      text-decoration: none;
       text-transform: uppercase;
     }
-    .btn-disabled {
-      color: #5a5750;
-      background: linear-gradient(180deg, #dedad0, #c8c4ba);
-      border: 1px solid rgba(43,41,38,0.28);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-      opacity: 0.75;
-      cursor: not-allowed;
+    .btn-amber {
+      color: #1c1a17;
+      background: linear-gradient(180deg, #e9a94e 0%, var(--amber) 45%, var(--amber-deep) 100%);
+      border: 1px solid var(--amber-deep);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+    .btn-amber:hover {
+      box-shadow: 0 2px 8px rgba(217,142,43,0.5), inset 0 1px 0 rgba(255,255,255,0.45);
     }
 
     .install-note {
@@ -280,7 +278,7 @@
       <div class="module-frame">
         <div class="module-header">
           <span class="panel-label">Choose a package</span>
-          <span class="release-status"><span class="led off" aria-hidden="true"></span> Not published yet</span>
+          <span class="release-status"><span class="led" aria-hidden="true"></span> Available now</span>
         </div>
         <div class="module-body">
           <h2 id="download-heading" class="panel-label" style="text-align:center;">Pro-55 for Windows</h2>
@@ -291,25 +289,25 @@
               <h2>VST3 only</h2>
               <p>For audio hosts that support VST3 instruments.</p>
               <div class="package-meta">Windows x64 · 0.9.0 public beta</div>
-              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
+              <a class="btn btn-amber" href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/Pro-55-0.9.0-beta-Windows-x64-VST3.zip">Download VST3 ZIP</a>
             </article>
             <article class="download-card">
               <span class="panel-label">CLAP</span>
               <h2>CLAP only</h2>
               <p>For audio hosts that support CLAP instruments.</p>
               <div class="package-meta">Windows x64 · 0.9.0 public beta</div>
-              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
+              <a class="btn btn-amber" href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/Pro-55-0.9.0-beta-Windows-x64-CLAP.zip">Download CLAP ZIP</a>
             </article>
             <article class="download-card">
               <span class="panel-label">Both formats</span>
               <h2>Combined ZIP</h2>
               <p>Contains VST3 and CLAP versions. Install only the format your host supports.</p>
               <div class="package-meta">Windows x64 · 0.9.0 public beta</div>
-              <button class="btn btn-disabled" type="button" disabled>Coming soon</button>
+              <a class="btn btn-amber" href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/Pro-55-0.9.0-beta-Windows-x64.zip">Download combined ZIP</a>
             </article>
           </div>
 
-          <p class="install-note"><strong>Before installing:</strong> These are unsigned beta plugins with no installer, activation, or telemetry. Each ZIP will include installation notes and checksums when it is published.</p>
+          <p class="install-note"><strong>Before installing:</strong> These are unsigned beta plugins with no installer, activation, or telemetry. Each ZIP includes installation guidance and license notices. See the <a href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/SHA256SUMS.txt">SHA-256 checksums</a> and <a href="https://github.com/TruexAudio/Pro-55">source and license details</a>.</p>
         </div>
       </div>
     </section>
