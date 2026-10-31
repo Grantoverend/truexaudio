@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Download the Pro-55 Windows x64 VST3 and CLAP synthesizer.">
+  <meta name="description" content="Download Pro-55 for Windows x64 and Apple Silicon macOS.">
   <title>Pro-55 Downloads — Truex Audio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -306,7 +306,7 @@
       <img src="assets/Truex_Audio_Logo.png" alt="Truex Audio">
     </div>
     <h1>Pro-55 Downloads</h1>
-    <p class="hero-sub">Version 0.9.0 public beta · Windows x64 · VST3 and CLAP</p>
+    <p class="hero-sub">Version 0.9.0 public beta · Windows x64 + Apple Silicon macOS</p>
   </header>
 
   <main>
@@ -348,6 +348,44 @@
       </div>
     </section>
 
+    <section class="module" aria-labelledby="mac-download-heading">
+      <div class="module-frame">
+        <div class="module-header">
+          <span class="panel-label">Apple Silicon beta</span>
+          <span class="release-status">macOS · arm64</span>
+        </div>
+        <div class="module-body">
+          <h2 id="mac-download-heading" class="panel-label" style="text-align:center;">Pro-55 for macOS</h2>
+          <p class="download-intro">Choose the format supported by your DAW. These experimental beta builds are for Apple Silicon Macs only.</p>
+          <div class="download-grid">
+            <article class="download-card">
+              <span class="panel-label">AUv2</span>
+              <h2>Audio Unit</h2>
+              <p>For GarageBand, Logic, and other hosts that support Audio Units.</p>
+              <div class="package-meta">macOS arm64 · 0.9.0 beta</div>
+              <a class="btn btn-amber" href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/Pro-55-macOS-arm64-AUv2.zip">Download AUv2 ZIP</a>
+            </article>
+            <article class="download-card">
+              <span class="panel-label">VST3</span>
+              <h2>VST3</h2>
+              <p>For audio hosts that support VST3 instruments.</p>
+              <div class="package-meta">macOS arm64 · 0.9.0 beta</div>
+              <a class="btn btn-amber" href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/Pro-55-macOS-arm64-VST3.zip">Download VST3 ZIP</a>
+            </article>
+            <article class="download-card">
+              <span class="panel-label">CLAP</span>
+              <h2>CLAP</h2>
+              <p>For audio hosts that support CLAP instruments.</p>
+              <div class="package-meta">macOS arm64 · 0.9.0 beta</div>
+              <a class="btn btn-amber" href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/Pro-55-macOS-arm64-CLAP.zip">Download CLAP ZIP</a>
+            </article>
+          </div>
+          <p class="install-note"><strong>Beta status:</strong> AUv2 was checked in GarageBand 10.4.14; VST3 and CLAP were checked in Bitwig Studio 6.0. Broad host testing is incomplete. The builds target macOS 11.0 but were tested on macOS 26.6.2 only. They are ad-hoc signed, not Developer ID signed or notarized; macOS may show a security warning. Intel Macs and earlier macOS versions are unverified.</p>
+          <p class="install-links"><a href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/Pro-55-0.9.0-beta-macOS-arm64-source.zip">Matching macOS source ZIP</a> &nbsp;·&nbsp; <a href="https://github.com/TruexAudio/Pro-55/releases/download/v0.9.0-beta/SHA256SUMS-macOS-arm64.txt">macOS SHA-256 checksums</a> &nbsp;·&nbsp; <a href="https://github.com/TruexAudio/Pro-55">Pro-55 on GitHub</a></p>
+        </div>
+      </div>
+    </section>
+
     <section class="module" aria-labelledby="install-heading">
       <div class="module-frame">
         <div class="module-header">
@@ -379,6 +417,41 @@
           </div>
           <p class="install-note"><strong>Finish setup:</strong> Start or restart your audio host and rescan for plugins if needed. System-wide folders may require administrator permission; use the per-user folder to avoid that. Pro-55 is an unsigned beta, so Windows may show a security warning.</p>
           <p class="install-links"><a href="https://github.com/TruexAudio/Pro-55/blob/main/Pro55/INSTALLATION.md">Full installation and sound-storage guide</a> &nbsp;·&nbsp; <a href="https://github.com/TruexAudio/Pro-55">Pro-55 on GitHub</a> &nbsp;·&nbsp; <a href="https://github.com/TruexAudio/Pro-55/issues">Report an issue</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="module" aria-labelledby="mac-install-heading">
+      <div class="module-frame">
+        <div class="module-header">
+          <span class="panel-label">Installation</span>
+          <span class="release-status">Apple Silicon macOS</span>
+        </div>
+        <div class="module-body">
+          <h2 id="mac-install-heading" class="panel-label" style="text-align:center;">Install the format your DAW supports</h2>
+          <p class="download-intro">Close your audio host before installing. Extract the ZIP, then copy the complete plugin bundle to the matching folder. Keep the bundle intact.</p>
+          <div class="install-grid">
+            <article class="download-card">
+              <span class="panel-label">AUv2</span>
+              <h2>Audio Unit</h2>
+              <p>Copy <code>Pro-55.component</code> to:</p>
+              <ul class="install-paths"><li><code>~/Library/Audio/Plug-Ins/Components</code></li></ul>
+            </article>
+            <article class="download-card">
+              <span class="panel-label">VST3</span>
+              <h2>VST3</h2>
+              <p>Copy <code>Pro-55.vst3</code> to:</p>
+              <ul class="install-paths"><li><code>~/Library/Audio/Plug-Ins/VST3</code></li></ul>
+            </article>
+            <article class="download-card">
+              <span class="panel-label">CLAP</span>
+              <h2>CLAP</h2>
+              <p>Copy <code>Pro-55.clap</code> to:</p>
+              <ul class="install-paths"><li><code>~/Library/Audio/Plug-Ins/CLAP</code></li></ul>
+            </article>
+          </div>
+          <p class="install-note"><strong>Finish setup:</strong> Restart your DAW or rescan its plugins. The beta is for Apple Silicon only and has no installer, activation, or telemetry.</p>
+          <p class="install-links"><a href="https://github.com/TruexAudio/Pro-55/blob/main/Pro55/INSTALLATION.md">Full installation and sound-storage guide</a> &nbsp;·&nbsp; <a href="https://github.com/TruexAudio/Pro-55/issues">Report an issue</a></p>
         </div>
       </div>
     </section>
