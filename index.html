@@ -366,49 +366,155 @@
       justify-content: center;
     }
 
-    /* Spec readout — a dark screen strip listing formats, like the PROGRAM NAME display */
-    .spec-screen {
-      margin-top: 0;
-      padding: 12px 18px;
+    .supported-formats {
+      margin-top: 30px;
+      padding: 18px 24px 14px;
+    }
+
+    .platform-groups {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: center;
+      gap: 20px;
+    }
+
+    .platform-group {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .platform-group + .platform-group {
+      border-left: 1px solid rgba(255,255,255,0.14);
+      padding-left: 16px;
+    }
+
+    .platform-title {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px 18px;
-    }
-
-    .spec-screen span {
+      justify-content: center;
+      gap: 9px;
+      margin: 0;
+      color: var(--amber);
       font-family: 'IBM Plex Mono', monospace;
       font-weight: 500;
-      font-size: 11px;
-      letter-spacing: 0.14em;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-align: center;
       text-transform: uppercase;
-      color: var(--amber);
-      text-shadow: 0 0 8px rgba(217,142,43,0.5);
     }
 
-    .spec-screen .platform-mark {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      white-space: nowrap;
-    }
-
-    .platform-mark svg {
+    .platform-title svg {
       display: block;
-      width: 15px;
-      height: 15px;
+      width: 19px;
+      height: 19px;
       flex: 0 0 auto;
       fill: #00a4ef;
     }
 
-    .platform-mark img {
+    .platform-title img {
       display: block;
-      width: 13px;
-      height: 16px;
+      width: 15px;
+      height: 18px;
       flex: 0 0 auto;
       object-fit: contain;
       filter: brightness(0) invert(1);
+    }
+
+    .format-icons {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .format-mark {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .format-mark.vst3 {
+      width: 76px;
+      height: 43px;
+      overflow: hidden;
+      border: 1px solid rgba(0,164,239,0.55);
+      border-radius: 4px;
+      box-shadow: 0 0 8px rgba(0,164,239,0.16);
+    }
+
+    .format-mark.vst3 img {
+      display: block;
+      width: 200%;
+      height: 200%;
+      max-width: none;
+      flex: 0 0 auto;
+      object-fit: cover;
+      filter: saturate(1.35) contrast(1.04);
+    }
+
+    .format-mark.clap {
+      width: 48px;
+      height: 58px;
+    }
+
+    .format-mark.clap img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: url(#clap-recolor);
+    }
+
+    .format-mark.audio-units {
+      width: 60px;
+      height: 60px;
+    }
+
+    .format-mark.audio-units img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: invert(1) hue-rotate(180deg);
+      mix-blend-mode: screen;
+    }
+
+    .release-flags {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .release-flags span {
+      color: #c9c4b9;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.19em;
+      text-transform: uppercase;
+    }
+
+    .release-flags .beta {
+      color: #e7a648;
+      font-weight: 600;
+    }
+
+    .svg-defs {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      pointer-events: none;
     }
 
     .status-line {
@@ -603,9 +709,21 @@
       .plugin-info-row { margin-top: 26px; }
       .plugin-title-row { gap: 14px 22px; }
       .plugin-cta-stack { padding-top: 0; }
-      .spec-screen { justify-content: flex-start; }
       .signup-form { flex-direction: column; }
       footer { padding: 24px 20px 40px; flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 600px) {
+      .supported-formats { padding: 16px 14px 12px; }
+      .platform-groups { grid-template-columns: 1fr; gap: 14px; }
+      .platform-group + .platform-group {
+        border-top: 1px solid rgba(255,255,255,0.14);
+        border-left: 0;
+        padding-top: 14px;
+        padding-left: 0;
+      }
+      .format-icons { gap: 18px; }
+      .release-flags { gap: 14px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -616,6 +734,15 @@
 </head>
 
 <body>
+
+  <svg class="svg-defs" aria-hidden="true" focusable="false">
+    <filter id="clap-recolor" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0 0 0 0 0.85
+                                             0 0 0 0 0.56
+                                             0 0 0 0 0.17
+                                            -0.2126 -0.7152 -0.0722 0 1" />
+    </filter>
+  </svg>
 
   <!-- ─── NAV ─── -->
   <nav>
@@ -672,23 +799,39 @@
 
             <div class="plugin-cta-stack">
               <a href="download.html" class="btn btn-amber">Download</a>
-              <div class="spec-screen screen-inset">
-                <span>CLAP</span>
-                <span>VST3</span>
-                <span>AUv2</span>
-                <span class="platform-mark">
+            </div>
+          </div>
+
+          <div class="supported-formats screen-inset" role="group" aria-label="Supported platforms and plugin formats">
+            <div class="platform-groups">
+              <section class="platform-group" aria-labelledby="mac-format-title">
+                <h4 class="platform-title" id="mac-format-title">
+                  <img src="assets/apple-logo.svg" alt="" aria-hidden="true">
+                  Apple Silicon macOS
+                </h4>
+                <div class="format-icons" aria-label="AUv2, VST3, and CLAP formats">
+                  <span class="format-mark vst3"><img src="assets/vst3-logo.webp" alt="VST3"></span>
+                  <span class="format-mark clap"><img src="assets/clap-logo.png" alt="CLAP"></span>
+                  <span class="format-mark audio-units"><img src="assets/audio-units-logo.webp" alt="Audio Units"></span>
+                </div>
+              </section>
+              <section class="platform-group" aria-labelledby="windows-format-title">
+                <h4 class="platform-title" id="windows-format-title">
                   <svg aria-hidden="true" viewBox="0 0 24 24">
                     <path d="M2 3h9v8H2zM13 3h9v8h-9zM2 13h9v8H2zM13 13h9v8h-9z"></path>
                   </svg>
                   Windows x64
-                </span>
-                <span class="platform-mark">
-                  <img src="assets/apple-logo.svg" alt="" aria-hidden="true">
-                  Apple Silicon macOS beta
-                </span>
-                <span>Free</span>
-                <span>Open source</span>
-              </div>
+                </h4>
+                <div class="format-icons" aria-label="VST3 and CLAP formats">
+                  <span class="format-mark vst3"><img src="assets/vst3-logo.webp" alt="VST3"></span>
+                  <span class="format-mark clap"><img src="assets/clap-logo.png" alt="CLAP"></span>
+                </div>
+              </section>
+            </div>
+            <div class="release-flags" aria-label="Free, open source beta">
+              <span>Free</span>
+              <span>Open source</span>
+              <span class="beta">Beta</span>
             </div>
           </div>
         </div>
