@@ -387,6 +387,30 @@
       text-shadow: 0 0 8px rgba(217,142,43,0.5);
     }
 
+    .spec-screen .platform-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .platform-mark svg {
+      display: block;
+      width: 15px;
+      height: 15px;
+      flex: 0 0 auto;
+      fill: #00a4ef;
+    }
+
+    .platform-mark img {
+      display: block;
+      width: 13px;
+      height: 16px;
+      flex: 0 0 auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
     .status-line {
       display: flex;
       align-items: center;
@@ -652,8 +676,16 @@
                 <span>CLAP</span>
                 <span>VST3</span>
                 <span>AUv2</span>
-                <span>Windows x64</span>
-                <span>macOS arm64 beta</span>
+                <span class="platform-mark">
+                  <svg aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M2 3h9v8H2zM13 3h9v8h-9zM2 13h9v8H2zM13 13h9v8h-9z"></path>
+                  </svg>
+                  Windows x64
+                </span>
+                <span class="platform-mark">
+                  <img src="assets/apple-logo.svg" alt="" aria-hidden="true">
+                  Apple Silicon macOS beta
+                </span>
                 <span>Free</span>
                 <span>Open source</span>
               </div>
